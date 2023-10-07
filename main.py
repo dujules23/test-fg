@@ -101,12 +101,16 @@ while run:
     # show player stats
     draw_health_bar(fighter_1.health, 20, 20)
     draw_health_bar(fighter_2.health, 580, 20)
+    draw_text("P1: " + str(score[0]), score_font, RED, 20, 60)
+    draw_text("P2: " + str(score[1]), score_font, RED, 580, 60)
 
     # update countdown
     if intro_count <= 0:
         # move fighters
-        fighter_1.move(SCREEN_WIDTH, SCREEN_HEIGHT, screen, fighter_2)
-        fighter_2.move(SCREEN_WIDTH, SCREEN_HEIGHT, screen, fighter_1)
+        fighter_1.move(SCREEN_WIDTH, SCREEN_HEIGHT,
+                       screen, fighter_2, round_over)
+        fighter_2.move(SCREEN_WIDTH, SCREEN_HEIGHT,
+                       screen, fighter_1, round_over)
     else:
         # display count timer
         draw_text(str(intro_count), count_font, RED,
@@ -115,7 +119,6 @@ while run:
         if (pygame.time.get_ticks() - last_count_update) >= 1000:
             intro_count -= 1
             last_count_update = pygame.time.get_ticks()
-            print(intro_count)
 
     # fighter_2.move()
 
@@ -133,12 +136,10 @@ while run:
             score[1] += 1
             round_over = True
             round_over_time = pygame.time.get_ticks()
-            print(score)
         elif fighter_2.alive == False:
             score[0] += 1
             round_over = True
             round_over_time = pygame.time.get_ticks()
-            print(score)
     else:
         # display victory image
         screen.blit(victory_img, (360, 150))
