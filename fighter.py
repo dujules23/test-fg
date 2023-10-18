@@ -2,7 +2,7 @@ import pygame
 
 
 class Fighter():
-    def __init__(self, player, x, y, flip, data, sprite_sheet, animation_steps):
+    def __init__(self, player, x, y, flip, data, sprite_sheet, animation_steps, sound):
         self.player = player
         self.size = data[0]
         self.image_scale = data[1]
@@ -20,6 +20,7 @@ class Fighter():
         self.attacking = False
         self.attack_type = 0
         self.attack_cooldown = 0
+        self.attack_sound = sound
         self.hit = False
         self.health = 100
         self.alive = True
@@ -79,25 +80,25 @@ class Fighter():
             # check player 2 controls
             if self.player == 2:
                 # movement
-                if key[pygame.K_LEFT]:
+                if key[pygame.K_j]:
                     dx = -SPEED
                     self.running = True
-                if key[pygame.K_RIGHT]:
+                if key[pygame.K_l]:
                     dx = SPEED
                     self.running = True
 
                 # jump
-                if key[pygame.K_UP] and self.jump == False:
+                if key[pygame.K_i] and self.jump == False:
                     self.vel_y = -30
                     self.jump = True
 
                 # attack
-                if key[pygame.K_KP1] or key[pygame.K_t]:
+                if key[pygame.K_y] or key[pygame.K_u]:
                     self.attack(target)
                     # determine what attack type was used
-                    if key[pygame.K_KP1]:
+                    if key[pygame.K_y]:
                         self.attack_type = 1
-                    if key[pygame.K_KP2]:
+                    if key[pygame.K_u]:
                         self.attack_type = 2
 
         # apply gravity
@@ -176,7 +177,9 @@ class Fighter():
 
     def attack(self, target):
         if self.attack_cooldown == 0:
+            # execute attack
             self.attacking = True
+            self.attack_sound.play()
             attacking_rect = pygame.Rect(
                 self.rect.centerx - (2 * self.rect.width * self.flip), self.rect.y, 2 * self.rect.width, self.rect.height)
             if attacking_rect.colliderect(target.rect):
